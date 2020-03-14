@@ -9,7 +9,7 @@
 using namespace std;
 using namespace cv;
 
-void FileList(char *path, char *ppath) {
+void FileList(char *path, char *filepath) {
 	WIN32_FIND_DATA wfd;
 	HANDLE hSrch;
 	SYSTEMTIME utc, lt;
@@ -32,20 +32,21 @@ void FileList(char *path, char *ppath) {
 				cout << newpath << drive << dir << wfd.cFileName << endl;
 
 				cout << "File Size : " << fileSize << endl;
-				FileList(newpath, ppath);
+				FileList(newpath, filepath);
 			}
 		}
 		else {
-			cout << drive << dir << wfd.cFileName << endl;
-			strcat(ppath, wfd.cFileName);
+			//cout << drive << dir << wfd.cFileName << endl;
+			sprintf(filepath, "%s%s%s", drive, dir, wfd.cFileName);
 			FileTimeToSystemTime(&wfd.ftCreationTime, &utc);
 			SystemTimeToTzSpecificLocalTime(NULL, &utc, &lt);
-			VideoCapture cap(ppath);
+			VideoCapture cap(filepath);
 			int width = cvRound(cap.get(CAP_PROP_FRAME_WIDTH));
 			int height = cvRound(cap.get(CAP_PROP_FRAME_HEIGHT));
 			double fps = cap.get(CAP_PROP_FPS);
 			int fcount = cvRound(cap.get(CAP_PROP_FRAME_COUNT));
 			char creationTime[100];
+			int length = fcount / fps;
 			fileSize = (((int)wfd.nFileSizeHigh) << 32) + wfd.nFileSizeLow;
 			sprintf(creationTime, "%d-%02d-%02d %02d:%02d:%02d", lt.wYear, lt.wMonth, lt.wDay, lt.wHour, lt.wMinute, lt.wMinute);
 			
@@ -53,14 +54,13 @@ void FileList(char *path, char *ppath) {
 			cout << "-------------------------------------------" << endl;
 			cout << "File Name : " << wfd.cFileName << endl;
 			cout << "File Size : " << fileSize << " Byte" << endl;
-			// cout << "Length : " << wfd.dwFileAttributes << endl;
+			cout << "Length : " << length << endl;
 			cout << "MK time : " << creationTime << endl;
 			cout << "Resolution : " << width << "X" << height << endl;
-			cout << "File Path : " << ppath << endl;
+			cout << "File Path : " << filepath << endl;
 
 			cout << "FPS : " << fps << endl;
 			cout << "Frame Count : " << fcount << endl;
-
 			cout << "-------------------------------------------" << endl;
 		}
 		bResult = FindNextFile(hSrch, &wfd);
@@ -71,8 +71,8 @@ void FileList(char *path, char *ppath) {
 void main()
 {
 	char Path[100] = "C:\\Users\\sjms1\\Desktop\\video";
-	char path[100] = "C:\\Users\\sjms1\\Desktop\\video\\";
+	char filepath[100] = "C:\\Users\\sjms1\\Desktop\\video\\";
 
 	strcat(Path, "\\*.*");
-	FileList(Path, path);
+	FileList(Path, filepath);
 }
