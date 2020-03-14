@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <locale>
 #include <string.h>
+#include <cstdlib>
 #include <opencv2/opencv.hpp>
 
 #pragma warning(disable: 4996)
@@ -11,6 +12,7 @@ using namespace cv;
 void FileList(char *path, char *ppath) {
 	WIN32_FIND_DATA wfd;
 	HANDLE hSrch;
+	SYSTEMTIME utc, lt;
 	BOOL bResult = TRUE;
 	char drive[_MAX_DRIVE];
 	char dir[MAX_PATH];
@@ -36,25 +38,30 @@ void FileList(char *path, char *ppath) {
 		else {
 			cout << drive << dir << wfd.cFileName << endl;
 			strcat(ppath, wfd.cFileName);
+			FileTimeToSystemTime(&wfd.ftCreationTime, &utc);
+			SystemTimeToTzSpecificLocalTime(NULL, &utc, &lt);
 			VideoCapture cap(ppath);
 			int width = cvRound(cap.get(CAP_PROP_FRAME_WIDTH));
 			int height = cvRound(cap.get(CAP_PROP_FRAME_HEIGHT));
 			double fps = cap.get(CAP_PROP_FPS);
 			int fcount = cvRound(cap.get(CAP_PROP_FRAME_COUNT));
+			char creationTime[100];
 			fileSize = (((int)wfd.nFileSizeHigh) << 32) + wfd.nFileSizeLow;
-		
+			sprintf(creationTime, "%d-%02d-%02d %02d:%02d:%02d", lt.wYear, lt.wMonth, lt.wDay, lt.wHour, lt.wMinute, lt.wMinute);
+			
+			// Print Video Info
+			cout << "-------------------------------------------" << endl;
 			cout << "File Name : " << wfd.cFileName << endl;
 			cout << "File Size : " << fileSize << " Byte" << endl;
 			// cout << "Length : " << wfd.dwFileAttributes << endl;
-			// cout << "Make time : " << wfd.ftCreationTime << endl;
+			cout << "MK time : " << creationTime << endl;
 			cout << "Resolution : " << width << "X" << height << endl;
 			cout << "File Path : " << ppath << endl;
 
 			cout << "FPS : " << fps << endl;
 			cout << "Frame Count : " << fcount << endl;
 
-
-			// cout << GetFileAttributes(wfd.cFileName) << endl;
+			cout << "-------------------------------------------" << endl;
 		}
 		bResult = FindNextFile(hSrch, &wfd);
 	}
@@ -63,13 +70,9 @@ void FileList(char *path, char *ppath) {
 
 void main()
 {
-	//std::locale::global(std::locale("ko_KR.UTF-8"));
-	// char Path[MAX_PATH];
-	// GetWindowsDirectory(Path, MAX_PATH);   // System Directory (Windows)
-	char Path[100] = "Path";
-	char path[100] = "ppath";
+	char Path[100] = "C:\\Users\\sjms1\\Desktop\\video";
+	char path[100] = "C:\\Users\\sjms1\\Desktop\\video\\";
 
 	strcat(Path, "\\*.*");
 	FileList(Path, path);
-	// cout << "MAX_PATH : "<< Path << endl;
 }
