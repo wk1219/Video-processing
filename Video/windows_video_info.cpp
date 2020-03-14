@@ -70,8 +70,8 @@ void FileList(char *path, char *filepath) {
 
 void main()
 {
-	char Path[100] = "C:\\Users\\sjms1\\Desktop\\video";
-	char filepath[100] = "C:\\Users\\sjms1\\Desktop\\video\\";
+	char Path[100] = "Path";
+	char filepath[100] = "file path";
 
 	strcat(Path, "\\*.*");
 	FileList(Path, filepath);
