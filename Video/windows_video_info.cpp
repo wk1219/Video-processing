@@ -8,6 +8,7 @@
 #pragma warning(disable: 4996)
 using namespace std;
 using namespace cv;
+
 class Video {
 private:
 	int num;
@@ -19,8 +20,7 @@ private:
 	char url[100];
 
 public:
-
-	void setVideo(int _num, char* _fileName, int _fileSize, char* _fileLength, char* _makeTime, char* _resolution, char* _url) 
+	void setVideo(int _num, char* _fileName, int _fileSize, char* _fileLength, char* _makeTime, char* _resolution, char* _url)
 	{
 		this->num = _num;
 		strcpy(this->fileName, _fileName);
@@ -30,16 +30,44 @@ public:
 		strcpy(this->resolution, _resolution);
 		strcpy(this->url, _url);
 	}
-	
+
+	int getNum() {
+		return this->num;
+	}
+
+	char* getName() {
+		return this->fileName;
+	}
+
+	int getSize() {
+		return this->fileSize;
+	}
+
+	char* getLength() {
+		return this->fileLength;
+	}
+
+	char* getMakeTime() {
+		return this->makeTime;
+	}
+
+	char* getResolution() {
+		return this->resolution;
+	}
+
+	char* getUrl() {
+		return this->url;
+	}
+
 	void printInfo() {
 		cout << "--------------------------------------------" << endl;
-		cout << "Num : " << num << endl;
-		cout << "FileName : " << fileName << endl;
-		cout << "FileSize : " << fileSize << " Byte" << endl;
-		cout << "FileLength : " << fileLength << endl;
-		cout << "MakeTime : " << makeTime << endl;
-		cout << "Resolution : "<< resolution << endl;
-		cout << "Path : " << url << endl;
+		cout << "NUM : " << getNum() << endl;
+		cout << "FileName : " << getName() << endl;
+		cout << "FileSize : " << getSize() << " Byte" << endl;
+		cout << "FileLength : " << getLength() << endl;
+		cout << "MakeTime : " << getMakeTime() << endl;
+		cout << "Resolution : " << getResolution() << endl;
+		cout << "Path : " << getUrl() << endl;
 		cout << "--------------------------------------------" << endl;
 	}
 };
@@ -94,9 +122,10 @@ void FileList(char *path, char *filepath) {
 			sprintf(vidMakeTime, "%d-%02d-%02d %02d:%02d:%02d", lt.wYear, lt.wMonth, lt.wDay, lt.wHour, lt.wMinute, lt.wMinute);	// Convert creationTime Format
 			sprintf(vidResolution, "%dX%d", width, height);			// Combine Width & Height
 
-			vid.setVideo(num, wfd.cFileName, fileSize, vidLength, vidMakeTime, vidResolution, filepath);	// Set Video Object
+			//vid.setVideo(num, wfd.cFileName, fileSize, vidLength, vidMakeTime, vidResolution, filepath);	// Set Video Object
+			vid.setVideo(num, wfd.cFileName, fileSize, vidLength, vidMakeTime, vidResolution, filepath);
 			vid.printInfo();		// Print Video Info
-
+			
 			/*
 			cout << "FPS : " << fps << endl;
 			cout << "Frame Count : " << fcount << endl;
@@ -111,8 +140,8 @@ void FileList(char *path, char *filepath) {
 
 int main()
 {
-	char Path[100] = "Path";
-	char filePath[100] = "filePath";
+	char Path[100] = "C:\\Users\\sjms1\\Desktop\\video";
+	char filePath[100] = "C:\\Users\\sjms1\\Desktop\\video\\";
 
 	strcat(Path, "\\*.*");
 	FileList(Path, filePath);
