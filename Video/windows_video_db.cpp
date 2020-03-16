@@ -11,12 +11,11 @@
 
 #define DB_HOST "localhost"
 #define DB_USER "root"
-#define DB_PW "mt4714573"
-#define DB_NAME "web"
+#define DB_PW "PASSWORD"
+#define DB_NAME "DB"
 
 using namespace std;
 using namespace cv;
-
 
 class Video {
 private:
@@ -204,8 +203,8 @@ void db_insert(Video vid) {
 }
 int main()
 {
-	char Path[100] = "C:\\Users\\sjms1\\Desktop\\Video\\";
-	char filePath[100] = "C:\\Users\\sjms1\\Desktop\\Video";
+	char Path[100] = "Path";
+	char filePath[100] = "FilePath";
 	
 	strcat(Path, "\*.*");
 	FileList(Path, filePath);
