@@ -17,6 +17,7 @@
 using namespace std;
 using namespace cv;
 
+
 class Video {
 private:
 	int num;
@@ -79,6 +80,8 @@ public:
 		cout << "--------------------------------------------" << endl;
 	}
 };
+void db_insert(Video vid);
+void db_select();
 
 void FileList(char* path, char* filepath) {
 	WIN32_FIND_DATA wfd;
@@ -91,6 +94,7 @@ void FileList(char* path, char* filepath) {
 	char file[MAX_PATH];
 	int fileSize = -1;
 	int num = 1;
+
 
 	cout << "Search Path = " << path << endl;
 	hSrch = FindFirstFile(path, &wfd);
@@ -110,6 +114,7 @@ void FileList(char* path, char* filepath) {
 			}
 		}
 		else {
+			
 			sprintf(filepath, "%s%s%s", drive, dir, wfd.cFileName);	// Combine path
 			FileTimeToSystemTime(&wfd.ftCreationTime, &utc);
 			SystemTimeToTzSpecificLocalTime(NULL, &utc, &lt);
@@ -133,7 +138,9 @@ void FileList(char* path, char* filepath) {
 			//vid.setVideo(num, wfd.cFileName, fileSize, vidLength, vidMakeTime, vidResolution, filepath);	// Set Video Object
 			vid.setVideo(num, wfd.cFileName, fileSize, vidLength, vidMakeTime, vidResolution, filepath);
 			vid.printInfo();		// Print Video Info
-			
+			db_insert(vid);
+			//db_select();
+
 			/*
 			cout << "FPS : " << fps << endl;
 			cout << "Frame Count : " << fcount << endl;
@@ -145,7 +152,26 @@ void FileList(char* path, char* filepath) {
 	}
 	FindClose(hSrch);
 }
-void db_select() {
+void db_insert(Video vid) {
+	MYSQL mysql;
+	MYSQL_RES* res;
+	MYSQL_ROW row;
+	int fields;
+	int i;
+	list <string> vlist;
+	list<string>::iterator iter;
+	MYSQL_FIELD* field;
+	char buf[255];
+
+	mysql_init(&mysql);
+
+	mysql_real_connect(&mysql, DB_HOST, DB_USER, DB_PW, DB_NAME, 3306, NULL, 0);
+	sprintf(buf, "insert into web.video values""('%d', '%s', '%d', '%s', '%s', '%s', '%s')",
+		vid.getNum(), vid.getName(), vid.getSize(), vid.getLength(), vid.getMakeTime(), vid.getResolution(), vid.getUrl());
+	mysql_query(&mysql, buf);
+	cout << "Insert Success!!" << endl;
+}
+ void db_select() {
 	MYSQL mysql;
 	MYSQL_RES* res;
 	MYSQL_ROW row;
@@ -179,9 +205,9 @@ void db_select() {
 }
 int main()
 {
-	char Path[100] = "Path";
-	char filePath[100] = "filePath";
-
-	strcat(Path, "\\*.*");
+	char Path[100] = "C:\\Users\\sjms1\\Desktop\\Video\\";
+	char filePath[100] = "C:\\Users\\sjms1\\Desktop\\Video";
+	
+	strcat(Path, "\*.*");
 	FileList(Path, filePath);
 }
