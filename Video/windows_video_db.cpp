@@ -92,9 +92,9 @@ void FileList(char* path, char* filepath) {
 	char dir[MAX_PATH];
 	char newpath[MAX_PATH];
 	char file[MAX_PATH];
+	char _dir[MAX_PATH];
 	int fileSize = -1;
 	int num = 1;
-
 
 	cout << "Search Path = " << path << endl;
 	hSrch = FindFirstFile(path, &wfd);
@@ -103,19 +103,19 @@ void FileList(char* path, char* filepath) {
 	}
 
 	_splitpath(path, drive, dir, NULL, NULL);
+	
 	while (bResult) {
 		Video vid = Video();
 		if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
 			if (strcmp(wfd.cFileName, ".") && strcmp(wfd.cFileName, "..")) {
 				cout << newpath << drive << dir << wfd.cFileName << endl;
-
 				cout << "File Size : " << fileSize << endl;
 				FileList(newpath, filepath);
 			}
 		}
 		else {
-			
-			sprintf(filepath, "%s%s%s", drive, dir, wfd.cFileName);	// Combine path
+			cout << dir << endl;
+			sprintf(filepath, "%s\\%s\\%s", drive, dir, wfd.cFileName);	// Combine path
 			FileTimeToSystemTime(&wfd.ftCreationTime, &utc);
 			SystemTimeToTzSpecificLocalTime(NULL, &utc, &lt);
 
@@ -135,8 +135,8 @@ void FileList(char* path, char* filepath) {
 			sprintf(vidMakeTime, "%d-%02d-%02d %02d:%02d:%02d", lt.wYear, lt.wMonth, lt.wDay, lt.wHour, lt.wMinute, lt.wMinute);	// Convert creationTime Format
 			sprintf(vidResolution, "%dX%d", width, height);			// Combine Width & Height
 
-			//vid.setVideo(num, wfd.cFileName, fileSize, vidLength, vidMakeTime, vidResolution, filepath);	// Set Video Object
-			vid.setVideo(num, wfd.cFileName, fileSize, vidLength, vidMakeTime, vidResolution, filepath);
+			vid.setVideo(num, wfd.cFileName, fileSize, vidLength, vidMakeTime, vidResolution, filepath);	// Set Video Object
+			
 			vid.printInfo();		// Print Video Info
 			db_insert(vid);
 			//db_select();
@@ -162,7 +162,6 @@ void db_insert(Video vid) {
 	list<string>::iterator iter;
 	MYSQL_FIELD* field;
 	char buf[255];
-
 	mysql_init(&mysql);
 
 	mysql_real_connect(&mysql, DB_HOST, DB_USER, DB_PW, DB_NAME, 3306, NULL, 0);
@@ -210,4 +209,5 @@ int main()
 	
 	strcat(Path, "\*.*");
 	FileList(Path, filePath);
+
 }
