@@ -7,4 +7,4 @@ Video processing &amp; Image processing
 - Raspberry Pi 3B+
 
 ## Compile
-- linux_db_video_insert.cpp <pre><code>g++ -o output linux_db_video_insert.cpp -lmysqlclient `pkg-config opencv --cflags --libs`</code></pre>
+- linux_db_video_insert.cpp <pre><code> g++ -o output linux_db_video_insert.cpp -lmysqlclient \`pkg-config opencv --cflags --libs\` </code></pre>
