@@ -71,9 +71,10 @@ def create_file():
 
 def convert(path, file_name):
     conv_file = file_name.split('.')[0] + '.mp4'
-    convert_cmd = 'MP4Box -fps 25 -add ' + path + file_name + " " + path + conv_file + "; rm " + path + file_name
+    dest_file = path + conv_file
+    convert_cmd = 'MP4Box -fps 25 -add ' + path + file_name + " " + dest_file + "; rm " + path + file_name
     os.system(convert_cmd)
-    return conv_file
+    return dest_file
 
 
 class recording:
@@ -102,11 +103,11 @@ class recording:
         impt_out = cv2.VideoWriter(path, fourcc, 25.0, (640, 480))
         return path, impt_out
 
-    def gyro(self, norm_video, sec):
+    def gyro(self, video, sec):
         print("IMPACT!!")
         path = self.impact_recording()[0]
 
-        impact_cmd = "ffmpeg -i %s -ss %s -t 20 -vcodec copy -acodec copy %s" % (norm_video, sec, path)
+        impact_cmd = "ffmpeg -i %s -ss %s -t 20 -vcodec copy -acodec copy %s" % (video, sec, path)
         os.system(impact_cmd)
 
     # out = self.impact_recording()[1]
