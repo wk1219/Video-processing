@@ -1,7 +1,7 @@
 import os
 import glob
 
-folder = "C:/Users/sjms1\\Desktop\\video\\*"
+folder = "./*"
 file_path = glob.glob(folder)
 
 print(file_path)
