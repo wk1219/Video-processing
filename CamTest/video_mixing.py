@@ -14,9 +14,10 @@ files.append(sorted(file_path, key=os.path.getctime, reverse=True))
 #   startFrame = time - 250     10 seconds before impact
 #   endFrame = Time + 250       10 seconds after impact
 
-startFrame = 10
-CurrentFrame = 0
-endFrame = 22
+time = 360      # Standard frame : 24 (about 15sec) 
+startFrame = time - 240     # 5 sec
+CurrentFrame = 0    
+endFrame = time + 240       # 25 sec 
 
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 npath = folder + '\\output.mp4'
@@ -28,6 +29,9 @@ for i in range(0, 2):
     fps = cap.get(cv2.CAP_PROP_FPS)
     current_frame = cap.get(cv2.CAP_PROP_POS_FRAMES)
     amount_of_frames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    
     cap.set(cv2.CAP_PROP_POS_FRAMES, startFrame)
 
     while True:
