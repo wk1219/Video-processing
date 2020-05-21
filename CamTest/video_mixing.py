@@ -8,6 +8,12 @@ file_path = glob.glob("%s/*.mp4" % (folder))
 files = []
 files.append(sorted(file_path, key=os.path.getctime, reverse=True))
 
+# Input impact  (Modify)
+# if y_scale > threshold:
+#   time = "Time"
+#   startFrame = time - 250     10 seconds before impact
+#   endFrame = Time + 250       10 seconds after impact
+
 startFrame = 10
 CurrentFrame = 0
 endFrame = 22
