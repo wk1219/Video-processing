@@ -1,13 +1,13 @@
 import cv2
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(-1)
 
 framerate = 25.0
 
 out = cv2.VideoWriter('appsrc ! videoconvert ! '
                          'x264enc noise-reduction=10000 speed-preset=ultrafast tune=zerolatency ! '
                          'rtph264pay config-interval=1 pt=96 !'
-                         'tcpserversink host="127.0.0.1" port=5000 sync=false',
+                         'tcpserversink host='ip' port='port' sync=false',
                          0, framerate, (640, 480))
 
 while cap.isOpened():
