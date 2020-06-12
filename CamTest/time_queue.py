@@ -7,12 +7,16 @@ def create_time():
 impt_time = []
 
 while True:
-    data = int(input())
-    if data == 2:
-        impt_time.append(create_time())
-        continue
-    elif data == 0:
+    t = create_time()
+    sec = int(t[11:13])
+    if sec % 2 == 1:
+        impt_time.append(t)
+        print(sec)
+    elif sec == 20:
         break
 
-for i in range(0, len(impt_time)):
-    print("%s" % impt_time[i])
+time_queue = sorted(list(set(impt_time)), reverse=False)
+queue_size = len(time_queue)
+
+for i in range(0, queue_size):
+    print("%s" % time_queue[i])
