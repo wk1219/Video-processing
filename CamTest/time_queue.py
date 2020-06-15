@@ -9,14 +9,18 @@ while True:
     t = create_time()
     file_name = t + '.mp4'
     sec = int(t[11:13])
-    impt.append((file_name, sec))
+    impt_tuple = (file_name, sec)
+    impt.append(impt_tuple)
     time_queue = sorted(set(impt), reverse=False)
-    if sec == 40:
+    if sec == 10:
         break
 
-keys = list(dict(time_queue).keys())        # Video file name list
-values = list(dict(time_queue).values())    # Impact time (sec) list
+    time_list = list(time_queue)
 
-for i in range(0, len(time_queue)):
-    print("[%d] file_name : %s, impt_time : %d" % (i, keys[i], values[i]))
-    # print("[%d] file_name : %s" % (i, time_queue[i]))
+for i in range(0, len(time_list)):
+    print("[%d] file_name : %s impt_time : %d" % (i, time_list[i][0], time_list[i][1]))
+
+# for i in range(0, 3):
+#     time_list.remove(impt_tuple[i][0])
+
+print("[%d] file_name : %s impt_time : %d" % (0, time_list[0][0], time_list[0][1]))
