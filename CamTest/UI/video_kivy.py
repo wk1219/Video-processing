@@ -15,11 +15,12 @@ class VideoPlayerApp(App):
     def name(self):
         text = 'NORM_200722_230835.mp4'
         print(text)
-        namebutton = self.root.ids.abc
-        namebutton.add_widget(Button(text='hello'))
+        # namebutton = self.root.ids.abc
+        # namebutton.add_widget(Button(text='hello'))
         return text
 
     def build(self):
+        self.txt = self.name()
         sm = ScreenManager()
         self.root = RootWidget()
         sm.add_widget(self.root)
@@ -29,3 +30,5 @@ ui = Builder.load_file("play.kv")
 
 if __name__ == "__main__":
     VideoPlayerApp().run()
+
+# reference need : https://kivy.org/doc/stable/_modules/kivy/uix/videoplayer.html
