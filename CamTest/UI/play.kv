@@ -1,0 +1,25 @@
+WindowManager:
+    RootWidget:
+
+<RootWidget>:
+    FloatLayout:
+        BoxLayout:
+            orientation: 'vertical'
+            size: 1200, 800
+            BoxLayout:
+                size: 1200, 700
+                VideoPlayer:
+                    id: video
+                    orientation: 'horizontal'
+                    source: 'test.mp4'
+                    state: "play"
+
+            BoxLayout:
+                size: 1200, 100
+                orientation: 'horizontal'
+                Button:
+                    text: "Video"
+                    font_size: 50
+                    on_press: print(video.source)
+
+
