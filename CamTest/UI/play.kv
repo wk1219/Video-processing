@@ -11,7 +11,7 @@ WindowManager:
                 VideoPlayer:
                     id: video
                     orientation: 'horizontal'
-                    source: 'test.mp4'
+                    source: root.vidname()
                     state: "play"
 
             BoxLayout:
@@ -20,6 +20,6 @@ WindowManager:
                 Button:
                     text: "Video"
                     font_size: 50
-                    on_press: print(video.source)
+                    on_press: root.vidname()
 
 
