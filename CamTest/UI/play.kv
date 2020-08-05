@@ -1,25 +1,88 @@
 WindowManager:
     RootWidget:
+    Menu:
+    Video_list:
 
 <RootWidget>:
+    name: "root"
+
     FloatLayout:
         BoxLayout:
+            size: root.width, root.height
             orientation: 'vertical'
-            size: 1200, 800
             BoxLayout:
-                size: 1200, 700
+                size: 800, 700
+                orientation: 'horizontal'
                 VideoPlayer:
                     id: video
-                    orientation: 'horizontal'
                     source: root.vidname()
                     state: "play"
 
             BoxLayout:
-                size: 1200, 100
+                size: 800, 100
                 orientation: 'horizontal'
                 Button:
                     text: "Video"
                     font_size: 50
-                    on_press: root.vidname()
+                    on_press: app.root.current = "video_list"
+                Button:
+                    text: "Home"
+                    font_size: 50
+                    on_press:
+                        app.root.current = "menu"
 
+<Menu>
+    name: "menu"
+    BoxLayout:
+        BoxLayout:
+            orientation: 'horizontal'
+            size: 800, 100
+            size_hint: (None, None)
 
+            Button:
+                text: "Back"
+                font_size: 50
+                on_release:
+                    app.root.current = "root"
+            Button:
+                text: "Home"
+                font_size: 50
+                on_release:
+                    app.root.current = "root"
+            Button:
+                text: "Menu"
+                font_size: 50
+                on_release:
+                    app.root.current = "menu"
+
+<Video_list>
+    name: "video_list"
+    FloatLayout:
+        BoxLayout:
+            size: root.width, root.height
+            orientation: 'vertical'
+            size_hint: (None, None)
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size: root.width, 0
+                size_hint: (None, None)
+                padding:10
+
+                Label:
+                    text: "Video Title"
+                    font_size: 20
+                    center_x: root.width / 2
+
+            RecycleView:
+                data: [{'text': str(x)} for x in root.data_items_norm]
+                viewclass: 'SelectableButton'
+                SelectableRecycleBoxLayout:
+                    id: controller
+                    size_hint_y: None
+                    height: self.minimum_height
+                    orientation: 'vertical'
+                    default_size_hint: 1, None
+                    default_size: 100, 75
+                    spacing: 10
+                    padding: 10
