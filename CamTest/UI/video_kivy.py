@@ -1,39 +1,44 @@
 import os
-from tkinter import Button
 from kivy.app import App
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
-from kivy.uix.recycleboxlayout import RecycleBoxLayout
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import BooleanProperty, ListProperty
 from kivy.uix.behaviors import FocusBehavior
 from kivy.uix.recycleview.layout import LayoutSelectionBehavior
-from kivy.uix.recycleview import RecycleView
-import pymysql
+from kivy.uix.recycleboxlayout import RecycleBoxLayout
+from kivy.uix.button import Button
+from kivy.uix.screenmanager import ScreenManager
+from kivy.uix.videoplayer import VideoPlayer
 
 path = 'C:\\Users\\sjms1\\Desktop\\video'
+
+
 class RootWidget(Screen):
     def vidname(self):
-        vid_list = []
-        text = 'IMPT_200531_180221.mp4'
-        print(text)
-        vid_list.append(text)
-        vid_list.append('test.mp4')
-        return vid_list[1]
+        sel = SelectableButton().get_source()
+        video = os.path.join(path, sel)
+        return video
+
+    def load_vid(self, video):
+        video = self.vidname()
+        self.vid = VideoPlayer(source=video, state='play', options={'allow_stretch': False, 'eos': 'loop'})
+        self.add_widget(self.vid)
+        # vid_list = []
+        # text = 'IMPT_200531_180221.mp4'
+        # print(text)
+        # vid_list.append(text)
+        # vid_list.append('test.mp4')
+        # return vid_list[1]
+
 
 class WindowManager(ScreenManager):
     pass
 
+
 class Menu(Screen):
     pass
 
-class Video_list(Screen):
-    data_items_norm = ListProperty([])
-    def get_board(self):
-        self.data_items_norm.append('App_download.mp4')
-        self.data_items_norm.append('NORM_200407_215033.mp4')
-        self.data_items_norm.append('video.mp4')
 
 class SelectableRecycleBoxLayout(FocusBehavior, LayoutSelectionBehavior,
                                  RecycleBoxLayout):
@@ -70,21 +75,40 @@ class SelectableButton(RecycleDataViewBehavior, Button):
     def on_press(self):
         data = self.text
         self.source = os.path.join(path, data)
-        data_index = self.index
+        print(self.source)
+        # data_index = self.index
 
     def get_source(self):
         return self.source
 
+
+class Video_list(Screen):
+    data_items_norm = ListProperty([])
+
+    def __init__(self, **kwargs):
+        super(Video_list, self).__init__(**kwargs)
+        self.get_board()
+
+    def get_board(self):
+        self.data_items_norm.append('App_download.mp4')
+        self.data_items_norm.append('NORM_200407_215033.mp4')
+        self.data_items_norm.append('video.mp4')
+
+
 class VideoPlayerApp(App):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.menu = Menu()
+        self.video_list = Video_list()
+
     def build(self):
         sm = ScreenManager()
         self.root = RootWidget()
-        self.menu = Menu()
-        self.video_list = Video_list()
         sm.add_widget(self.root)
         sm.add_widget(self.menu)
         sm.add_widget(self.video_list)
         return sm
+
 
 ui = Builder.load_file("play.kv")
 
@@ -92,3 +116,4 @@ if __name__ == "__main__":
     VideoPlayerApp().run()
 
 # reference need : https://kivy.org/doc/stable/_modules/kivy/uix/videoplayer.html
+# https://github.com/jcomish/kivy-video-app/blob/master/main.py
