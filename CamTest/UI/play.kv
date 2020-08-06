@@ -13,10 +13,6 @@ WindowManager:
             BoxLayout:
                 size: 800, 700
                 orientation: 'horizontal'
-                VideoPlayer:
-                    id: video
-                    source: root.vidname()
-                    state: "play"
 
             BoxLayout:
                 size: 800, 100
@@ -86,3 +82,7 @@ WindowManager:
                     default_size: 100, 75
                     spacing: 10
                     padding: 10
+
+<VideoPlayer>:
+    options: {'eos': 'loop'}
+    allow_stretch:True
