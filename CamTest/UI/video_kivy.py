@@ -11,7 +11,7 @@ from kivy.uix.button import Button
 from kivy.uix.screenmanager import ScreenManager
 from kivy.uix.videoplayer import VideoPlayer
 
-path = 'C:\\Users\\sjms1\\Desktop\\video'
+path = 'path'
 
 
 class RootWidget(Screen):
@@ -24,6 +24,7 @@ class RootWidget(Screen):
         video = self.vidname()
         self.vid = VideoPlayer(source=video, state='play', options={'allow_stretch': False, 'eos': 'loop'})
         self.add_widget(self.vid)
+
         # vid_list = []
         # text = 'IMPT_200531_180221.mp4'
         # print(text)
