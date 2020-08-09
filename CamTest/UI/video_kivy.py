@@ -11,10 +11,10 @@ from kivy.uix.button import Button
 from kivy.uix.screenmanager import ScreenManager
 from kivy.uix.videoplayer import VideoPlayer
 
-path = 'path'
+path = 'C:\\Users\\sjms1\\Desktop\\video'
 
 
-class RootWidget(Screen):
+class ScreenVideo(Screen):
     def vidname(self):
         sel = SelectableButton().get_source()
         video = os.path.join(path, sel)
@@ -24,6 +24,9 @@ class RootWidget(Screen):
         video = self.vidname()
         self.vid = VideoPlayer(source=video, state='play', options={'allow_stretch': False, 'eos': 'loop'})
         self.add_widget(self.vid)
+
+    def on_leave(self):
+        pass
 
         # vid_list = []
         # text = 'IMPT_200531_180221.mp4'
@@ -101,11 +104,11 @@ class VideoPlayerApp(App):
         super().__init__(**kwargs)
         self.menu = Menu()
         self.video_list = Video_list()
+        self.sv = ScreenVideo()
 
     def build(self):
         sm = ScreenManager()
-        self.root = RootWidget()
-        sm.add_widget(self.root)
+        sm.add_widget(self.sv)
         sm.add_widget(self.menu)
         sm.add_widget(self.video_list)
         return sm
