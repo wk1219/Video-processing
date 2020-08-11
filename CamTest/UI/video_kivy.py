@@ -3,7 +3,7 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import BooleanProperty, ListProperty
+from kivy.properties import BooleanProperty, ListProperty, StringProperty
 from kivy.uix.behaviors import FocusBehavior
 from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.uix.recycleboxlayout import RecycleBoxLayout
@@ -16,24 +16,22 @@ path = 'C:\\Users\\sjms1\\Desktop\\video'
 
 class ScreenVideo(Screen):
     def vidname(self):
-        sel = SelectableButton().get_source()
-        video = os.path.join(path, sel)
+        self.sel = SelectableButton().on_press()
+        video = os.path.join(path, self.sel)
+        print(video)
         return video
 
     def load_vid(self, video):
         video = self.vidname()
-        self.vid = VideoPlayer(source=video, state='play', options={'allow_stretch': False, 'eos': 'loop'})
-        self.add_widget(self.vid)
+        vid = VideoPlayer(source=video, state='play', options={'allow_stretch': False, 'eos': 'loop'})
+        self.add_widget(vid)
+
+    def path_test(self):
+        pt = os.path.join(path, 'video.mp4')
+        return pt
 
     def on_leave(self):
         pass
-
-        # vid_list = []
-        # text = 'IMPT_200531_180221.mp4'
-        # print(text)
-        # vid_list.append(text)
-        # vid_list.append('test.mp4')
-        # return vid_list[1]
 
 
 class WindowManager(ScreenManager):
@@ -79,8 +77,9 @@ class SelectableButton(RecycleDataViewBehavior, Button):
     def on_press(self):
         data = self.text
         self.source = os.path.join(path, data)
-        print(self.source)
-        # data_index = self.index
+        self.source
+        # print(self.source)
+        return self.source
 
     def get_source(self):
         return self.source
