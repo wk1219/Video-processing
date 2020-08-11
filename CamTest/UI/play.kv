@@ -10,17 +10,27 @@ WindowManager:
         BoxLayout:
             size: root.width, root.height
             orientation: 'vertical'
+            size_hint: (None, None)
             BoxLayout:
                 size: 800, 700
                 orientation: 'horizontal'
 
+                VideoPlayer:
+                    source: root.vidname()
+                    state: "play"
+                    options: {'eos': 'loop'}
+                    allow_stretch:True
+
             BoxLayout:
-                size: 800, 100
+                size: root.width, 100
                 orientation: 'horizontal'
+                size_hint: (None, None)
+
                 Button:
                     text: "Video"
                     font_size: 50
                     on_press: app.root.current = "video_list"
+
                 Button:
                     text: "Home"
                     font_size: 50
@@ -29,27 +39,32 @@ WindowManager:
 
 <Menu>
     name: "menu"
-    BoxLayout:
+    FloatLayout:
         BoxLayout:
-            orientation: 'horizontal'
-            size: 800, 100
+            size: root.width, root.height
+            orientation: 'vertical'
             size_hint: (None, None)
 
-            Button:
-                text: "Back"
-                font_size: 50
-                on_release:
-                    app.root.current = "root"
-            Button:
-                text: "Home"
-                font_size: 50
-                on_release:
-                    app.root.current = "root"
-            Button:
-                text: "Menu"
-                font_size: 50
-                on_release:
-                    app.root.current = "menu"
+            BoxLayout:
+                size: root.width, 100
+                orientation: 'horizontal'
+                size_hint: (None, None)
+
+                Button:
+                    text: "Back"
+                    font_size: 50
+                    on_release:
+                        app.root.current = "root"
+                Button:
+                    text: "Home"
+                    font_size: 50
+                    on_release:
+                        app.root.current = "root"
+                Button:
+                    text: "Menu"
+                    font_size: 50
+                    on_release:
+                        app.root.current = "menu"
 
 <Video_list>
     name: "video_list"
