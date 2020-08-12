@@ -13,11 +13,14 @@ from kivy.uix.videoplayer import VideoPlayer
 
 path = 'C:\\Users\\sjms1\\Desktop\\video'
 
+vidlist = []
 
 class ScreenVideo(Screen):
     def vidname(self):
         self.sel = SelectableButton().on_press()
-        video = os.path.join(path, self.sel)
+        # video = os.path.join(path, self.sel)
+        vidlist = Video_list().data_items_norm
+        video = os.path.join(path, vidlist[0])
         print(video)
         return video
 
@@ -77,7 +80,6 @@ class SelectableButton(RecycleDataViewBehavior, Button):
     def on_press(self):
         data = self.text
         self.source = os.path.join(path, data)
-        self.source
         # print(self.source)
         return self.source
 
@@ -96,7 +98,8 @@ class Video_list(Screen):
         self.data_items_norm.append('App_download.mp4')
         self.data_items_norm.append('NORM_200407_215033.mp4')
         self.data_items_norm.append('video.mp4')
-
+        vidlist = self.data_items_norm
+        return vidlist
 
 class VideoPlayerApp(App):
     def __init__(self, **kwargs):
