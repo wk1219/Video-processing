@@ -1,4 +1,6 @@
 import os
+from os import listdir
+import glob
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
@@ -12,22 +14,35 @@ from kivy.uix.screenmanager import ScreenManager
 from kivy.uix.videoplayer import VideoPlayer
 
 path = 'C:\\Users\\sjms1\\Desktop\\video'
+index = 0
+select = False
+val = (None, None)
 
-vidlist = []
+def file_list(in_path):
+    vidlist = glob.glob(in_path + '\\*.mp4')
+    print(vidlist)
+    return vidlist
+
 
 class ScreenVideo(Screen):
     def vidname(self):
-        self.sel = SelectableButton().on_press()
-        # video = os.path.join(path, self.sel)
+        source = ''
+        val = SelectableButton().on_press()
         vidlist = Video_list().data_items_norm
-        video = os.path.join(path, vidlist[0])
-        print(video)
-        return video
+        print("key : " + str(val[0]))
+        # Modify
+        # for i in range(0, len(vidlist)):
+        #     if (val[0] == i) and (val[1] == True):
+        #         print("HI")
+        #         source = vidlist[i]
 
-    def load_vid(self, video):
+        return source
+
+    def load_vid(self):
         video = self.vidname()
         vid = VideoPlayer(source=video, state='play', options={'allow_stretch': False, 'eos': 'loop'})
         self.add_widget(vid)
+        return video
 
     def path_test(self):
         pt = os.path.join(path, 'video.mp4')
@@ -80,8 +95,14 @@ class SelectableButton(RecycleDataViewBehavior, Button):
     def on_press(self):
         data = self.text
         self.source = os.path.join(path, data)
-        # print(self.source)
-        return self.source
+        print(self.selectable)
+        print(self.index)
+        print(self.text)
+        print("=" * 30)
+        index = self.index
+        select = self.selectable
+        val = (index, select)
+        return val
 
     def get_source(self):
         return self.source
@@ -95,11 +116,10 @@ class Video_list(Screen):
         self.get_board()
 
     def get_board(self):
-        self.data_items_norm.append('App_download.mp4')
-        self.data_items_norm.append('NORM_200407_215033.mp4')
-        self.data_items_norm.append('video.mp4')
+        self.data_items_norm = file_list(path)
         vidlist = self.data_items_norm
         return vidlist
+
 
 class VideoPlayerApp(App):
     def __init__(self, **kwargs):
