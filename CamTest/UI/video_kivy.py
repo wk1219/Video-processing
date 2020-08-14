@@ -41,7 +41,7 @@ class ScreenVideo(Screen):
     def load_vid(self):
         video = self.vidname()
         vid = VideoPlayer(source=video, state='play', options={'allow_stretch': False, 'eos': 'loop'})
-        self.add_widget(vid)
+        # self.add_widget(vid)
         return video
 
     def path_test(self):
@@ -95,10 +95,15 @@ class SelectableButton(RecycleDataViewBehavior, Button):
     def on_press(self):
         data = self.text
         self.source = os.path.join(path, data)
-        print(self.selectable)
-        print(self.index)
-        print(self.text)
+        print("Selectable : %s" % self.selectable)
+        print("Selected : %s" % self.selected)
+        print("Index : %s" % self.index)
+        if self.index == None:
+            print("FileName : None")
+        else:
+            print("FileName : %s" % data.split('\\')[5])
         print("=" * 30)
+
         index = self.index
         select = self.selectable
         val = (index, select)
