@@ -25,19 +25,20 @@ def file_list(in_path):
 
 
 class ScreenVideo(Screen):
-    def vidname(self):
-        source = file_list(path)
+    key = ''
+    def vidname(self, key):
         file = ''
-        print(source)
-        sb = SelectableButton()
+        source = file_list(path)
         vidlist = Video_list().data_items_norm
-        check = sb.selectable
-        val = sb.index
-        if check == True:
-            print("#" * 50)
-            print("key : " + str(val))
-        # print(source)
+        print(source)
+        val = key
+        # sb = SelectableButton()
+        # check = sb.selectable
+        # val = sb.index
 
+        print("#" * 50)
+        print("key : " + str(val))
+        # print(check)
 
         # Modify
         # for i in range(0, len(vidlist)):
@@ -45,11 +46,11 @@ class ScreenVideo(Screen):
         #         print("HI")
         #         file = source[i]
                 # source = vidlist[i]
-            print("#" * 50)
+        print("#" * 50)
         return file
 
     def load_vid(self):
-        video = self.vidname()
+        video = self.vidname(self.key)
         print("HOHO")
         vid = VideoPlayer(source=video, state='play', options={'allow_stretch': False, 'eos': 'loop'})
         # self.add_widget(vid)
@@ -115,17 +116,17 @@ class SelectableButton(RecycleDataViewBehavior, Button):
         else:
             print("FileName : %s" % data)
             print("Abstract path : %s" % self.source)
-        print("=" * 30)
-
-        self.val = (self.index, self.selectable)
+        sv = ScreenVideo()
+        sv.vidname(self.index)
+        print("=" * 50)
         return self.selectable
 
     def get_source(self):
         return self.source
 
     def get_val(self):
-        val = (self.index, self.selectable)
-        return val
+        self.val = (self.index, self.selectable)
+        return self.val
 
 
 class Video_list(Screen):
