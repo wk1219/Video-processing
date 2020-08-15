@@ -16,30 +16,41 @@ from kivy.uix.videoplayer import VideoPlayer
 path = 'C:\\Users\\sjms1\\Desktop\\video'
 index = 0
 select = False
-val = (None, None)
+
 
 def file_list(in_path):
     vidlist = glob.glob(in_path + '\\*.mp4')
-    print(vidlist)
+    # print(vidlist)
     return vidlist
 
 
 class ScreenVideo(Screen):
     def vidname(self):
-        source = ''
-        val = SelectableButton().on_press()
+        source = file_list(path)
+        file = ''
+        print(source)
+        sb = SelectableButton()
         vidlist = Video_list().data_items_norm
-        print("key : " + str(val[0]))
+        check = sb.selectable
+        val = sb.index
+        if check == True:
+            print("#" * 50)
+            print("key : " + str(val))
+        # print(source)
+
+
         # Modify
         # for i in range(0, len(vidlist)):
-        #     if (val[0] == i) and (val[1] == True):
+        #     # if (val[0] == i) and (val[1] == True):
         #         print("HI")
-        #         source = vidlist[i]
-
-        return source
+        #         file = source[i]
+                # source = vidlist[i]
+            print("#" * 50)
+        return file
 
     def load_vid(self):
         video = self.vidname()
+        print("HOHO")
         vid = VideoPlayer(source=video, state='play', options={'allow_stretch': False, 'eos': 'loop'})
         # self.add_widget(vid)
         return video
@@ -71,6 +82,7 @@ class SelectableButton(RecycleDataViewBehavior, Button):
     index = None
     selected = BooleanProperty(False)
     selectable = BooleanProperty(True)
+    val = (None, None)
 
     def refresh_view_attrs(self, rv, index, data):
         ''' Catch and handle the view changes '''
@@ -101,29 +113,35 @@ class SelectableButton(RecycleDataViewBehavior, Button):
         if self.index == None:
             print("FileName : None")
         else:
-            print("FileName : %s" % data.split('\\')[5])
+            print("FileName : %s" % data)
+            print("Abstract path : %s" % self.source)
         print("=" * 30)
 
-        index = self.index
-        select = self.selectable
-        val = (index, select)
-        return val
+        self.val = (self.index, self.selectable)
+        return self.selectable
 
     def get_source(self):
         return self.source
 
+    def get_val(self):
+        val = (self.index, self.selectable)
+        return val
+
 
 class Video_list(Screen):
     data_items_norm = ListProperty([])
-
+    video_items = []
     def __init__(self, **kwargs):
         super(Video_list, self).__init__(**kwargs)
         self.get_board()
 
     def get_board(self):
-        self.data_items_norm = file_list(path)
-        vidlist = self.data_items_norm
-        return vidlist
+        self.video_items = file_list(path)
+        # self.data_items_norm = file_list(path)
+        for i in range(0, len(self.video_items)):
+            self.data_items_norm.append(os.path.split(self.video_items[i])[1])
+        vidlist = self.video_items
+        return self.data_items_norm
 
 
 class VideoPlayerApp(App):
