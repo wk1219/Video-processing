@@ -24,14 +24,18 @@ def file_list(in_path):
 
 
 class VideoWidget(Screen):
-    key = ''
+    key = 0
     check = False
     file = ''
 
-    def vidname(self, key, check):
+    def vidname(self, key, check, file):
         source = file_list(path)
         vidlist = Video_list().data_items_norm
         # print(source)
+        self.file = file
+        self.key = key
+        self.check = check
+
         print("#" * 50)
         print("key : " + str(key))
         print("Check : " + str(check))
@@ -39,9 +43,9 @@ class VideoWidget(Screen):
         # Modify
         for i in range(0, len(vidlist)):
             if check == True:
-                self.file = source[key]
+                file = source[key]
 
-        print(self.file)
+        print("File : " + str(self.file))
         print("#" * 50)
         return self.file
 
@@ -49,10 +53,13 @@ class VideoWidget(Screen):
         return self.file
 
     def load_vid(self):
-        video = self.vidname(self.key, self.check)
-        print("HOHO")
-        vid = VideoPlayer(source=video, state='play', options={'allow_stretch': False, 'eos': 'loop'}, size=(800, 700))
-        # self.add_widget(vid)
+        video = self.vidname(self.key, self.check, self.file)
+        print("Video : " + video)
+        print("KEY : " + str(self.key))
+        # print("CHECK : " + str(self.check))
+        # print("FILE : " + str(self.file))
+        vid = VideoPlayer(source=video, state='play', options={'allow_stretch': True, 'eos': 'loop'}, pos=(0, 100))
+        self.add_widget(vid)
         return video
 
     def path_test(self):
@@ -71,17 +78,17 @@ class ScreenVideo(Screen):
         source = file_list(path)
         vidlist = Video_list().data_items_norm
         # print(source)
-        print("#" * 50)
-        print("key : " + str(key))
-        print("Check : " + str(check))
+        # print("#" * 50)
+        # print("key : " + str(key))
+        # print("Check : " + str(check))
 
         # Modify
         for i in range(0, len(vidlist)):
             if check == True:
                 self.file = source[key]
 
-        print(self.file)
-        print("#" * 50)
+        # print(self.file)
+        # print("#" * 50)
         return self.file
 
     def get_source(self):
@@ -89,8 +96,9 @@ class ScreenVideo(Screen):
 
     def load_vid(self):
         video = self.vidname(self.key, self.check)
-        print("HOHO")
-        vid = VideoPlayer(source=video, state='play', options={'allow_stretch': False, 'eos': 'loop'}, size=(800, 700))
+        # print("HOHO")
+        # print(video)
+        # vid = VideoPlayer(source=video, state='play', options={'allow_stretch': False, 'eos': 'loop'}, size=(800, 700))
         # self.add_widget(vid)
         return video
 
@@ -154,8 +162,8 @@ class SelectableButton(RecycleDataViewBehavior, Button):
         else:
             print("FileName : %s" % data)
             print("Abstract path : %s" % self.source)
-        sv = ScreenVideo()
-        sv.vidname(self.index, self.selectable)
+        vw = VideoWidget()
+        vw.vidname(self.index, self.selectable, self.text)
         print("=" * 50)
         return self.selectable
 
