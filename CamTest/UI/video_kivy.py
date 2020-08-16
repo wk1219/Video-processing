@@ -23,6 +23,46 @@ def file_list(in_path):
     return vidlist
 
 
+class VideoWidget(Screen):
+    key = ''
+    check = False
+    file = ''
+
+    def vidname(self, key, check):
+        source = file_list(path)
+        vidlist = Video_list().data_items_norm
+        # print(source)
+        print("#" * 50)
+        print("key : " + str(key))
+        print("Check : " + str(check))
+
+        # Modify
+        for i in range(0, len(vidlist)):
+            if check == True:
+                self.file = source[key]
+
+        print(self.file)
+        print("#" * 50)
+        return self.file
+
+    def get_source(self):
+        return self.file
+
+    def load_vid(self):
+        video = self.vidname(self.key, self.check)
+        print("HOHO")
+        vid = VideoPlayer(source=video, state='play', options={'allow_stretch': False, 'eos': 'loop'}, size=(800, 700))
+        # self.add_widget(vid)
+        return video
+
+    def path_test(self):
+        pt = os.path.join(path, 'video.mp4')
+        return pt
+
+    def on_leave(self):
+        pass
+
+
 class ScreenVideo(Screen):
     key = ''
     check = False
@@ -51,7 +91,7 @@ class ScreenVideo(Screen):
         video = self.vidname(self.key, self.check)
         print("HOHO")
         vid = VideoPlayer(source=video, state='play', options={'allow_stretch': False, 'eos': 'loop'}, size=(800, 700))
-        self.add_widget(vid)
+        # self.add_widget(vid)
         return video
 
     def path_test(self):
@@ -101,7 +141,7 @@ class SelectableButton(RecycleDataViewBehavior, Button):
         self.selected = is_selected
 
     def on_release(self, *args):
-        App.get_running_app().root.current = "root"
+        App.get_running_app().root.current = "video_widget"
 
     def on_press(self):
         data = self.text
@@ -147,12 +187,14 @@ class VideoPlayerApp(App):
         self.menu = Menu()
         self.video_list = Video_list()
         self.sv = ScreenVideo()
+        self.video_widget = VideoWidget()
 
     def build(self):
         sm = ScreenManager()
         sm.add_widget(self.sv)
         sm.add_widget(self.menu)
         sm.add_widget(self.video_list)
+        sm.add_widget(self.video_widget)
         return sm
 
 
