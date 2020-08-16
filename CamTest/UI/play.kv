@@ -2,6 +2,8 @@ WindowManager:
     ScreenVideo:
     Menu:
     Video_list:
+    VideoWidget:
+
 
 <ScreenVideo>:
     name: "root"
@@ -16,7 +18,7 @@ WindowManager:
                 orientation: 'horizontal'
 
                 VideoPlayer:
-                    source: root.vidname()
+                    source: root.load_vid()
                     state: "play"
                     options: {'eos': 'loop'}
                     allow_stretch:True
@@ -76,7 +78,7 @@ WindowManager:
 
             BoxLayout:
                 orientation: 'horizontal'
-                size: root.width, 0
+                size: root.width, 50
                 size_hint: (None, None)
                 padding:10
 
@@ -84,6 +86,21 @@ WindowManager:
                     text: "Video Title"
                     font_size: 20
                     center_x: root.width / 2
+
+            BoxLayout:
+                orientation: 'vertical'
+                size: root.width, 50
+                size_hint: (None,None)
+                padding: 10
+
+                Button:
+                    size: 100, 50
+                    size_hint: (None,None)
+                    text:"Back"
+                    font_size: 20
+                    pos_hint: {'right': 1}
+                    on_release:
+                        app.root.current = "root"
 
             RecycleView:
                 data: [{'text': str(x)} for x in root.data_items_norm]
@@ -98,6 +115,36 @@ WindowManager:
                     spacing: 10
                     padding: 10
 
-<VideoPlayer>:
-    options: {'eos': 'loop'}
-    allow_stretch:True
+
+<VideoWidget>:
+    name: "video_widget"
+    FloatLayout:
+        BoxLayout:
+            size: root.width, root.height
+            orientation: 'vertical'
+            size_hint: (None, None)
+
+            BoxLayout:
+                size: root.width, 500
+                size_hint: (None,None)
+                orientation: 'horizontal'
+
+            VideoPlayer:
+                source: root.load_vid()
+                state: "play"
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size: root.width, 100
+                size_hint: (None, None)
+                Button:
+                    text: "Root"
+                    font_size:50
+                    on_release:
+                        app.root.current = "root"
+
+                Button:
+                    text: "Menu"
+                    font_size:50
+                    on_release:
+                        app.root.current = "menu"
