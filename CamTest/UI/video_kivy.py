@@ -20,37 +20,38 @@ select = False
 
 def file_list(in_path):
     vidlist = glob.glob(in_path + '\\*.mp4')
-    # print(vidlist)
     return vidlist
 
 
 class ScreenVideo(Screen):
     key = ''
     check = False
-
+    file = ''
     def vidname(self, key, check):
-        file = ''
         source = file_list(path)
         vidlist = Video_list().data_items_norm
-        print(source)
+        # print(source)
         print("#" * 50)
         print("key : " + str(key))
         print("Check : " + str(check))
 
         # Modify
-        # for i in range(0, len(vidlist)):
-        #     # if (val[0] == i) and (val[1] == True):
-        #         print("HI")
-        #         file = source[i]
-                # source = vidlist[i]
+        for i in range(0, len(vidlist)):
+            if check == True:
+                self.file = source[key]
+
+        print(self.file)
         print("#" * 50)
-        return file
+        return self.file
+
+    def get_source(self):
+        return self.file
 
     def load_vid(self):
         video = self.vidname(self.key, self.check)
         print("HOHO")
-        vid = VideoPlayer(source=video, state='play', options={'allow_stretch': False, 'eos': 'loop'})
-        # self.add_widget(vid)
+        vid = VideoPlayer(source=video, state='play', options={'allow_stretch': False, 'eos': 'loop'}, size=(800, 700))
+        self.add_widget(vid)
         return video
 
     def path_test(self):
@@ -135,10 +136,8 @@ class Video_list(Screen):
 
     def get_board(self):
         self.video_items = file_list(path)
-        # self.data_items_norm = file_list(path)
         for i in range(0, len(self.video_items)):
             self.data_items_norm.append(os.path.split(self.video_items[i])[1])
-        vidlist = self.video_items
         return self.data_items_norm
 
 
