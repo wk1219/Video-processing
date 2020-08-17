@@ -3,6 +3,7 @@ from os import listdir
 import glob
 from kivy.app import App
 from kivy.lang import Builder
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import BooleanProperty, ListProperty, StringProperty
@@ -24,28 +25,37 @@ def file_list(in_path):
 
 
 class VideoWidget(Screen):
-    key = 0
-    check = False
-    file = ''
+    # key = 0
+    # check = False
+    # file = ''
+
+    # Modify Constructor
+    def __init__(self, **kwargs):
+        super(VideoWidget, self).__init__(**kwargs)
+        # self.key = key
+        # self.check = check
+        # self.file = file
+
 
     def vidname(self, key, check, file):
         source = file_list(path)
         vidlist = Video_list().data_items_norm
         # print(source)
+
         self.file = file
         self.key = key
         self.check = check
 
         print("#" * 50)
         print("key : " + str(key))
-        print("Check : " + str(check))
+        print("check : " + str(check))
 
         # Modify
         for i in range(0, len(vidlist)):
             if check == True:
                 file = source[key]
 
-        print("File : " + str(self.file))
+        print("file : " + str(self.file))
         print("#" * 50)
         return self.file
 
@@ -53,13 +63,17 @@ class VideoWidget(Screen):
         return self.file
 
     def load_vid(self):
-        video = self.vidname(self.key, self.check, self.file)
-        print("Video : " + video)
-        print("KEY : " + str(self.key))
+        # video = self.vidname(self.key, self.check, self.file)
+        video = self.file
+        print("Video : " + str(video))
+        # print("KEY : " + str(self.key))
         # print("CHECK : " + str(self.check))
         # print("FILE : " + str(self.file))
-        vid = VideoPlayer(source=video, state='play', options={'allow_stretch': True, 'eos': 'loop'}, pos=(0, 100))
+        vid = VideoPlayer(source=video, state='play', options={'allow_stretch': True, 'eos': 'loop'}, pos=(0, 100),
+                          size_hint=(None, None), size=(800, 500))
+        but = Button(text="HOHO", size_hint=(None, None), size=(400, 100))
         self.add_widget(vid)
+        self.add_widget(but)
         return video
 
     def path_test(self):
