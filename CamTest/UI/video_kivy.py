@@ -25,35 +25,35 @@ def file_list(in_path):
 
 
 class VideoWidget(Screen):
-    # key = 0
-    # check = False
-    # file = ''
+    key = 0
+    check = False
+    file = ''
 
     # Modify Constructor
-    def __init__(self, **kwargs):
-        super(VideoWidget, self).__init__(**kwargs)
-        # self.key = key
-        # self.check = check
-        # self.file = file
+    # def __init__(self, key, check, file, **kwargs):
+    #     super(VideoWidget, self).__init__(**kwargs)
+    #     self.key = key
+    #     self.check = check
+    #     self.file = file
 
 
     def vidname(self, key, check, file):
+        self.key = key
+        self.check = check
+        self.file = file
+
         source = file_list(path)
         vidlist = Video_list().data_items_norm
         # print(source)
 
-        self.file = file
-        self.key = key
-        self.check = check
-
         print("#" * 50)
-        print("key : " + str(key))
-        print("check : " + str(check))
+        print("key : " + str(self.key))
+        print("check : " + str(self.check))
 
         # Modify
         for i in range(0, len(vidlist)):
-            if check == True:
-                file = source[key]
+            if self.check == True:
+                file = source[index]
 
         print("file : " + str(self.file))
         print("#" * 50)
@@ -63,9 +63,11 @@ class VideoWidget(Screen):
         return self.file
 
     def load_vid(self):
-        # video = self.vidname(self.key, self.check, self.file)
-        video = self.file
-        print("Video : " + str(video))
+        video = self.vidname(self.key, self.check, self.file)
+        # video = self.file
+
+        print("==============LOAD VIDEO===========")
+        print("VIDEO : " + str(video))
         # print("KEY : " + str(self.key))
         # print("CHECK : " + str(self.check))
         # print("FILE : " + str(self.file))
@@ -76,13 +78,8 @@ class VideoWidget(Screen):
         self.add_widget(but)
         return video
 
-    def path_test(self):
-        pt = os.path.join(path, 'video.mp4')
-        return pt
-
     def on_leave(self):
         pass
-
 
 class ScreenVideo(Screen):
     key = ''
@@ -91,18 +88,13 @@ class ScreenVideo(Screen):
     def vidname(self, key, check):
         source = file_list(path)
         vidlist = Video_list().data_items_norm
-        # print(source)
-        # print("#" * 50)
-        # print("key : " + str(key))
-        # print("Check : " + str(check))
+
 
         # Modify
         for i in range(0, len(vidlist)):
             if check == True:
                 self.file = source[key]
 
-        # print(self.file)
-        # print("#" * 50)
         return self.file
 
     def get_source(self):
@@ -110,10 +102,6 @@ class ScreenVideo(Screen):
 
     def load_vid(self):
         video = self.vidname(self.key, self.check)
-        # print("HOHO")
-        # print(video)
-        # vid = VideoPlayer(source=video, state='play', options={'allow_stretch': False, 'eos': 'loop'}, size=(800, 700))
-        # self.add_widget(vid)
         return video
 
     def path_test(self):
@@ -162,7 +150,15 @@ class SelectableButton(RecycleDataViewBehavior, Button):
         ''' Respond to the selection of items in the view. '''
         self.selected = is_selected
 
+    def get_data_index(self):
+        return self.parent.get_view_index_at(self.center)
+
+    @property
+    def rv(self):
+        return self.parent.parent
+
     def on_release(self, *args):
+        # self.rv.data.pop(self.get_data_index())
         App.get_running_app().root.current = "video_widget"
 
     def on_press(self):
@@ -171,18 +167,21 @@ class SelectableButton(RecycleDataViewBehavior, Button):
         print("Selectable : %s" % self.selectable)
         print("Selected : %s" % self.selected)
         print("Index : %s" % self.index)
+
         if self.index == None:
             print("FileName : None")
         else:
             print("FileName : %s" % data)
             print("Abstract path : %s" % self.source)
+
         vw = VideoWidget()
-        vw.vidname(self.index, self.selectable, self.text)
+        vw.vidname(self.index, self.selectable, self.source)
         print("=" * 50)
         return self.selectable
 
     def get_source(self):
         return self.source
+
 
     def get_val(self):
         self.val = (self.index, self.selectable)
@@ -219,6 +218,9 @@ class VideoPlayerApp(App):
         sm.add_widget(self.video_widget)
         return sm
 
+    def on_start(self):
+        rv = self.root
+        rv.data = file_list(path)
 
 ui = Builder.load_file("play.kv")
 
