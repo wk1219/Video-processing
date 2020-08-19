@@ -130,8 +130,10 @@ WindowManager:
                 orientation: 'horizontal'
 
                 VideoPlayer:
-                    source: root.load_vid()
+                    id: video_player
+                    size_hint: (None, None)
                     state: "play"
+                    size: root.width, 500
 
             BoxLayout:
                 orientation: 'horizontal'
@@ -144,7 +146,7 @@ WindowManager:
                         app.root.current = "root"
 
                 Button:
-                    text: "Menu"
+                    text: "Back"
                     font_size:50
                     on_release:
-                        app.root.current = "menu"
+                        app.root.current = "video_list"
