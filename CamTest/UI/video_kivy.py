@@ -1,12 +1,14 @@
 import os
 from os import listdir
 import glob
+from kivy.clock import Clock
+import cv2
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import BooleanProperty, ListProperty, StringProperty
+from kivy.properties import BooleanProperty, ListProperty, StringProperty, NumericProperty, OptionProperty
 from kivy.uix.behaviors import FocusBehavior
 from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.uix.recycleboxlayout import RecycleBoxLayout
@@ -30,12 +32,11 @@ class VideoWidget(Screen):
     file = ''
 
     # Modify Constructor
-    # def __init__(self, key, check, file, **kwargs):
+    # def __init__(self, **kwargs):
     #     super(VideoWidget, self).__init__(**kwargs)
     #     self.key = key
     #     self.check = check
     #     self.file = file
-
 
     def vidname(self, key, check, file):
         self.key = key
@@ -44,7 +45,6 @@ class VideoWidget(Screen):
 
         source = file_list(path)
         vidlist = Video_list().data_items_norm
-        # print(source)
 
         print("#" * 50)
         print("key : " + str(self.key))
@@ -57,7 +57,13 @@ class VideoWidget(Screen):
 
         print("file : " + str(self.file))
         print("#" * 50)
-        return self.file
+
+        self.ids['video_player'].source = self.file
+        # self.ids['video_player'].source = 'C:\\Users\\sjms1\\Desktop\\video\\video.mp4'
+        print("WHIWHIWHi %s" % self.ids['video_player'].source)
+        # self.ids['video_player'].source = 'C:\\Users\\sjms1\\Desktop\\video\\Sample1_FILE191222-154506.AVI'
+        # return self.file
+
 
     def get_source(self):
         return self.file
@@ -74,7 +80,7 @@ class VideoWidget(Screen):
         vid = VideoPlayer(source=video, state='play', options={'allow_stretch': True, 'eos': 'loop'}, pos=(0, 100),
                           size_hint=(None, None), size=(800, 500))
         but = Button(text="HOHO", size_hint=(None, None), size=(400, 100))
-        self.add_widget(vid)
+        # self.add_widget(vid)
         self.add_widget(but)
         return video
 
@@ -229,3 +235,4 @@ if __name__ == "__main__":
 
 # reference need : https://kivy.org/doc/stable/_modules/kivy/uix/videoplayer.html
 # https://github.com/jcomish/kivy-video-app/blob/master/main.py
+# https://github.com/Albatros53113/kivy_multiple_video
