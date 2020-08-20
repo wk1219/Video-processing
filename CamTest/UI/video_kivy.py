@@ -67,28 +67,29 @@ class VideoWidget(Screen):
         framecnt = 0
         while (cap.isOpened()):
             ret, frame = cap.read()
+            dst = cv2.resize(frame, dsize=(640, 480), interpolation=cv2.INTER_AREA)
             if ret == True:
                 framecnt += cv2.CAP_PROP_POS_FRAMES
-                cv2.imshow('frame', frame)
-                Clock.schedule_once(partial(self.display_frame, frame))
+                cv2.imshow('frame', dst)
+                Clock.schedule_once(partial(self.display_frame, dst))
+                if cap.get(cv2.CAP_PROP_FRAME_COUNT) == framecnt:
+                    break
+
                 if cv2.waitKey(20) >= 0:
                     cap.release()
                     break
-                elif cap.get(cv2.CAP_PROP_FRAME_COUNT) == framecnt:
-                    break
+
 
         print("FINISH")
         cv2.destroyAllWindows()
 
         # self.ids['video_player'].source = self.file
-        # self.ids['video_player'].source = 'C:\\Users\\sjms1\\Desktop\\video\\video.mp4'
-        # print("WHIWHIWHi %s" % self.ids['video_player'].source)
         # return self.file
         # read_thread = threading.Thread(target=self.vidname(), args=(self.key, self.check, self.file))
         # read_thread.start()
 
     def display_frame(self, frame, dt):
-        texture = Texture.create(size=(640, 480), colorfmt='bgr')
+        texture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
         texture.blit_buffer(frame.tobytes(order=None), colorfmt='bgr', bufferfmt='ubyte')
         texture.flip_vertical()
         self.ids.video_player.texture = texture
@@ -192,7 +193,6 @@ class SelectableButton(RecycleDataViewBehavior, Button):
         return self.parent.parent
 
     def on_release(self, *args):
-        # self.rv.data.pop(self.get_data_index())
         App.get_running_app().root.current = "video_list"
 
     def on_press(self):
@@ -211,7 +211,6 @@ class SelectableButton(RecycleDataViewBehavior, Button):
         vw = VideoWidget()
         vw.vidname(self.index, self.selectable, self.source)
         print("=" * 50)
-        App.get_running_app().root.current = "video_list"
         # return self.selectable
 
     def get_source(self):
