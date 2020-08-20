@@ -8,7 +8,6 @@ import cv2
 from kivy.app import App
 from kivy.graphics.texture import Texture
 from kivy.lang import Builder
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import BooleanProperty, ListProperty, StringProperty, NumericProperty, OptionProperty
@@ -17,9 +16,6 @@ from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.uix.recycleboxlayout import RecycleBoxLayout
 from kivy.uix.button import Button
 from kivy.uix.screenmanager import ScreenManager
-from kivy.uix.videoplayer import VideoPlayer
-from kivy.uix.image import Image
-import numpy as np
 
 path = 'C:\\Users\\sjms1\\Desktop\\video'
 index = 0
@@ -32,16 +28,7 @@ def file_list(in_path):
 
 
 class VideoWidget(Screen):
-    key = 0
-    check = False
-    file = ''
 
-    # Modify Constructor
-    # def __init__(self, **kwargs):
-    #     super(VideoWidget, self).__init__(**kwargs)
-    #     self.key = key
-    #     self.check = check
-    #     self.file = file
     def vidname(self, key, check, file):
 
         self.key = key
@@ -67,12 +54,13 @@ class VideoWidget(Screen):
         framecnt = 0
         while (cap.isOpened()):
             ret, frame = cap.read()
-            dst = cv2.resize(frame, dsize=(640, 480), interpolation=cv2.INTER_AREA)
+            dst = cv2.resize(frame, dsize=(800, 600), interpolation=cv2.INTER_AREA)
             if ret == True:
                 framecnt += cv2.CAP_PROP_POS_FRAMES
                 cv2.imshow('frame', dst)
                 Clock.schedule_once(partial(self.display_frame, dst))
                 if cap.get(cv2.CAP_PROP_FRAME_COUNT) == framecnt:
+                    cap.release()
                     break
 
                 if cv2.waitKey(20) >= 0:
@@ -81,6 +69,7 @@ class VideoWidget(Screen):
 
 
         print("FINISH")
+        cv2.waitKey(0)
         cv2.destroyAllWindows()
 
         # self.ids['video_player'].source = self.file
@@ -97,24 +86,6 @@ class VideoWidget(Screen):
     def get_source(self):
         return self.file
 
-    def load_vid(self):
-        video = self.vidname(self.key, self.check, self.file)
-        # video = self.file
-
-        print("==============LOAD VIDEO===========")
-        print("VIDEO : " + str(video))
-        # print("KEY : " + str(self.key))
-        # print("CHECK : " + str(self.check))
-        # print("FILE : " + str(self.file))
-        vid = VideoPlayer(source=video, state='play', options={'allow_stretch': True, 'eos': 'loop'}, pos=(0, 100),
-                          size_hint=(None, None), size=(800, 500))
-        but = Button(text="HOHO", size_hint=(None, None), size=(400, 100))
-        # self.add_widget(vid)
-        self.add_widget(but)
-        return video
-
-    def on_leave(self):
-        pass
 
 class ScreenVideo(Screen):
     key = ''
