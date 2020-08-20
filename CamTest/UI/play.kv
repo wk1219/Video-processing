@@ -129,11 +129,12 @@ WindowManager:
                 size_hint: (None,None)
                 orientation: 'horizontal'
 
-                VideoPlayer:
+                Image:
                     id: video_player
-                    size_hint: (None, None)
-                    state: "play"
                     size: root.width, 500
+                    allow_stretch: True
+                    keep_ratio: True
+
 
             BoxLayout:
                 orientation: 'horizontal'
