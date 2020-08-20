@@ -1,9 +1,12 @@
 import os
+import threading
+from functools import partial
 from os import listdir
 import glob
 from kivy.clock import Clock
 import cv2
 from kivy.app import App
+from kivy.graphics.texture import Texture
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
@@ -15,6 +18,8 @@ from kivy.uix.recycleboxlayout import RecycleBoxLayout
 from kivy.uix.button import Button
 from kivy.uix.screenmanager import ScreenManager
 from kivy.uix.videoplayer import VideoPlayer
+from kivy.uix.image import Image
+import numpy as np
 
 path = 'C:\\Users\\sjms1\\Desktop\\video'
 index = 0
@@ -37,8 +42,8 @@ class VideoWidget(Screen):
     #     self.key = key
     #     self.check = check
     #     self.file = file
-
     def vidname(self, key, check, file):
+
         self.key = key
         self.check = check
         self.file = file
@@ -58,12 +63,35 @@ class VideoWidget(Screen):
         print("file : " + str(self.file))
         print("#" * 50)
 
-        self.ids['video_player'].source = self.file
-        # self.ids['video_player'].source = 'C:\\Users\\sjms1\\Desktop\\video\\video.mp4'
-        print("WHIWHIWHi %s" % self.ids['video_player'].source)
-        # self.ids['video_player'].source = 'C:\\Users\\sjms1\\Desktop\\video\\Sample1_FILE191222-154506.AVI'
-        # return self.file
+        cap = cv2.VideoCapture(self.file)
+        framecnt = 0
+        while (cap.isOpened()):
+            ret, frame = cap.read()
+            if ret == True:
+                framecnt += cv2.CAP_PROP_POS_FRAMES
+                cv2.imshow('frame', frame)
+                Clock.schedule_once(partial(self.display_frame, frame))
+                if cv2.waitKey(20) >= 0:
+                    cap.release()
+                    break
+                elif cap.get(cv2.CAP_PROP_FRAME_COUNT) == framecnt:
+                    break
 
+        print("FINISH")
+        cv2.destroyAllWindows()
+
+        # self.ids['video_player'].source = self.file
+        # self.ids['video_player'].source = 'C:\\Users\\sjms1\\Desktop\\video\\video.mp4'
+        # print("WHIWHIWHi %s" % self.ids['video_player'].source)
+        # return self.file
+        # read_thread = threading.Thread(target=self.vidname(), args=(self.key, self.check, self.file))
+        # read_thread.start()
+
+    def display_frame(self, frame, dt):
+        texture = Texture.create(size=(640, 480), colorfmt='bgr')
+        texture.blit_buffer(frame.tobytes(order=None), colorfmt='bgr', bufferfmt='ubyte')
+        texture.flip_vertical()
+        self.ids.video_player.texture = texture
 
     def get_source(self):
         return self.file
@@ -165,7 +193,7 @@ class SelectableButton(RecycleDataViewBehavior, Button):
 
     def on_release(self, *args):
         # self.rv.data.pop(self.get_data_index())
-        App.get_running_app().root.current = "video_widget"
+        App.get_running_app().root.current = "video_list"
 
     def on_press(self):
         data = self.text
@@ -183,7 +211,8 @@ class SelectableButton(RecycleDataViewBehavior, Button):
         vw = VideoWidget()
         vw.vidname(self.index, self.selectable, self.source)
         print("=" * 50)
-        return self.selectable
+        App.get_running_app().root.current = "video_list"
+        # return self.selectable
 
     def get_source(self):
         return self.source
